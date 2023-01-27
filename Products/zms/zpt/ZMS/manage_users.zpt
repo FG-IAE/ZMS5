@@ -623,8 +623,8 @@ function zmiModalInsertUserOpen(context) {
 				if (extra.length>0) {
 					$a.append(' ( ' + extra.join(', ') + ' ) ');
 				}
-				$a.attr("title",title.join("; ")).tooltip("show");
-				//$a.attr("title", "Double-click to edit!");
+				//$a.attr("title",title.join("; ")).tooltip("show");
+				$a.attr("title", "Double-click to edit!");
 				return $.Deferred().resolve().promise();
 			});
 		}
