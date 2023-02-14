@@ -32,11 +32,11 @@ function ZMSGraphic_extEdit_initialize() {
 	$("body").append("<style>div.jcrop-holder input { display:none; visibility:hidden; }</style>");
 	$("#zmiModalZMSGraphic_extEdit_actions #ZMSGraphic_extEdit_crop").click(function() {
 		$ZMSGraphic_img = $('.modal-body div#ZMSGraphic_extEdit_image img');
-		var cropper_gui = toggle_cropper_gui($(this))
+		var cropper_gui = toggle_cropper_gui($(this));
 		if ( cropper_gui == true ) {
 			ZMSGraphic_action = 'crop';
 			// Add Cropper Marker to image
-			changeCropperAvailability(available=true,cropping=true);
+			changeCropperAvailability(available = true, cropping = true);
 		} else {
 			// Remove Cropper Marker from image
 			ZMSGraphic_action = null;
@@ -121,71 +121,79 @@ function ZMSGraphic_extEdit_action( elName, elParams, pil) {
 						var h = $(`input#height_${ZMSGraphic_elName}`).val();
 						$('input#ZMSGraphic_extEdit_width').val(w)
 							.keyup(function(){
-									var w = parseInt($(this).val());
-									if (!(isNaN(w))) {
-									$('input#ZMSGraphic_extEdit_width').val(w);
-									if ($("#ZMSGraphic_extEdit_proportional").prop("checked")) {
-										var v = w/ZMSGraphic_act_width;
-										var h = Math.round(v*ZMSGraphic_act_height);
-										$("input#ZMSGraphic_extEdit_height").val(h);
-									}
-									var h = $("#ZMSGraphic_extEdit_height").val();
-									$ZMSGraphic_img.attr({'width':w,'height':h});
-									}
-								});
+								var w = parseInt($(this).val());
+								if (!(isNaN(w))) {
+								$('input#ZMSGraphic_extEdit_width').val(w);
+								if ($("#ZMSGraphic_extEdit_proportional").prop("checked")) {
+									var v = w/ZMSGraphic_act_width;
+									var h = Math.round(v*ZMSGraphic_act_height);
+									$("input#ZMSGraphic_extEdit_height").val(h);
+								}
+								var h = $("#ZMSGraphic_extEdit_height").val();
+								$ZMSGraphic_img.attr({'width':w,'height':h});
+								}
+							});
 						$('input#ZMSGraphic_extEdit_height').val(h)
 							.keyup(function(){
-									var h = parseInt($(this).val());
-									if (!(isNaN(h))) {
-									$('input#ZMSGraphic_extEdit_height').val(h);
-									if ($("#ZMSGraphic_extEdit_proportional").prop("checked")) {
-										var v = h/ZMSGraphic_act_height;
-										var w = Math.round(v*ZMSGraphic_act_width);
-										$("input#ZMSGraphic_extEdit_width").val(w);
-									}
-									var w = $("input#ZMSGraphic_extEdit_width").val();
-									$ZMSGraphic_img.attr({'width':w,'height':h});
-									}
-								});
+								var h = parseInt($(this).val());
+								if (!(isNaN(h))) {
+								$('input#ZMSGraphic_extEdit_height').val(h);
+								if ($("#ZMSGraphic_extEdit_proportional").prop("checked")) {
+									var v = h/ZMSGraphic_act_height;
+									var w = Math.round(v*ZMSGraphic_act_width);
+									$("input#ZMSGraphic_extEdit_width").val(w);
+								}
+								var w = $("input#ZMSGraphic_extEdit_width").val();
+								$ZMSGraphic_img.attr({'width':w,'height':h});
+								}
+							});
 						var v = Math.round(100*w/ZMSGraphic_act_width);
+
 						// Image
-						var canvasMax = 600;
-						var canvasHeight = ZMSGraphic_act_height;
 						var canvasWidth = ZMSGraphic_act_width;
-						if (canvasWidth > canvasMax || canvasHeight > canvasMax) {
-							if (canvasWidth > canvasMax) {
-								canvasHeight = Math.round(canvasHeight*canvasMax/canvasWidth);
-								canvasWidth = canvasMax;
-							}
-							else {
-								canvasWidth = Math.round(canvasWidth*canvasMax/canvasHeight);
-								canvasHeight = canvasMax;
+						var canvasHeight = ZMSGraphic_act_height;
+						var canvasWidthMax = window.innerWidth*0.68;
+						var canvasHeightMax = window.innerHeight*0.65;
+						if (ZMSGraphic_act_width > canvasWidthMax || ZMSGraphic_act_height > canvasHeightMax ) {
+							canvasWidth = canvasWidthMax;
+							canvasHeight = canvasHeightMax;
+							canvasHeight = Math.round(ZMSGraphic_act_height*canvasWidth/ZMSGraphic_act_width);
+							if (canvasHeight > canvasHeightMax) {
+								canvasWidth = Math.round(ZMSGraphic_act_width*canvasHeightMax/ZMSGraphic_act_height);
+								canvasHeight = canvasHeightMax;
 							}
 						}
 						$('.modal-body div#ZMSGraphic_extEdit_image').css({width:canvasWidth,height:canvasHeight});
 						$('.modal-body div#ZMSGraphic_extEdit_image').html('<img src="'+result['src']+'" width="'+v+'%"/>');
 						$ZMSGraphic_img = $('.modal-body div#ZMSGraphic_extEdit_image img');
-						// Slider
 
+						// Slider
 						$(".modal-body #ZMSGraphic_extEdit_slider").on("input", function() {
 							$(this).trigger('change');
 						})
 						$(".modal-body #ZMSGraphic_extEdit_slider").on("change", function() {
-									var v = parseInt($(this).val());
-									var w = Math.round(v*ZMSGraphic_act_width/100);
-									var h = Math.round(v*ZMSGraphic_act_height/100);
-									$('input#ZMSGraphic_extEdit_width').val(w);
-									$('input#ZMSGraphic_extEdit_height').val(h);
-									$ZMSGraphic_img.attr({width:v+'%'});
-								});
+							var v = parseInt($(this).val());
+							var w = Math.round(v*ZMSGraphic_act_width/100);
+							var h = Math.round(v*ZMSGraphic_act_height/100);
+							$('input#ZMSGraphic_extEdit_width').val(w);
+							$('input#ZMSGraphic_extEdit_height').val(h);
+							$ZMSGraphic_img.attr({width:v+'%'});
+						});
 						ZMSGraphic_extEdit_initialize();
 						$ZMI.setCursorAuto("ZMSGraphic_extEdit_action");
 					});
 					console.log("EO ZMSGraphic_extEdit_actions.open");
 				},
 				beforeClose:function() {
+					// Remove Cropper Marker from image
+					ZMSGraphic_action = null;
+					try {
+						$ZMSGraphic_img.cropper('clear');
+						$ZMSGraphic_img.cropper('destroy');
+					} catch (error) {
+						console.log('ZMSGraphic_extEdit_initialize' +  error)
+					}
 					$('div#ZMSGraphic_extEdit_image').html('');
-					changeCropperAvailability(img=null, available=true,cropping=true);
 				},
 		});
 }
@@ -239,13 +247,13 @@ function ZMSGraphic_extEdit_apply() {
 			params[i] = ZMSGraphic_params[i];
 		}
 		$.get('manage_changeTempBlobjProperty',params,
-				function(data){
-					if (data.length==0) return;
-					var result = eval('('+data+')');
-					var elName = result['elName'];
-					var elParams = 'lang='+encodeURI(result['lang'])+'&key='+encodeURI(result['key'])+'&form_id='+encodeURI(result['form_id']);
-					ZMSGraphic_extEdit_set(elName,result['src'],result['filename'],result['width'],result['height'],elParams);
-				});
+			function(data){
+				if (data.length==0) return;
+				var result = eval('('+data+')');
+				var elName = result['elName'];
+				var elParams = 'lang='+encodeURI(result['lang'])+'&key='+encodeURI(result['key'])+'&form_id='+encodeURI(result['form_id']);
+				ZMSGraphic_extEdit_set(elName,result['src'],result['filename'],result['width'],result['height'],elParams);
+			});
 	}
 	// Crop
 	else if (ZMSGraphic_action == 'crop') {
@@ -262,12 +270,12 @@ function ZMSGraphic_extEdit_apply() {
 			params[i] = ZMSGraphic_params[i];
 		}
 		$.get('manage_changeTempBlobjProperty',params,
-				function(data){
-					if (data.length==0) return;
-					var result = eval('('+data+')');
-					console.log(result);
-					ZMSGraphic_extEdit_set(ZMSGraphic_elName,result['src'],result['filename'],result['width'],result['height']);
-				});
+			function(data){
+				if (data.length==0) return;
+				var result = eval('('+data+')');
+				console.log(result);
+				ZMSGraphic_extEdit_set(ZMSGraphic_elName,result['src'],result['filename'],result['width'],result['height']);
+			});
 	}
 	// Resize
 	else {
@@ -283,11 +291,11 @@ function ZMSGraphic_extEdit_apply() {
 					params[i] = ZMSGraphic_params[i];
 				}
 				$.get('manage_changeTempBlobjProperty',params,
-						function(data){
-							if (data.length==0) return;
-							var result = eval('('+data+')');
-							ZMSGraphic_extEdit_set(ZMSGraphic_elName,result['src'],result['filename'],result['width'],result['height']);
-						});
+					function(data){
+						if (data.length==0) return;
+						var result = eval('('+data+')');
+						ZMSGraphic_extEdit_set(ZMSGraphic_elName,result['src'],result['filename'],result['width'],result['height']);
+					});
 				v = 100;
 			}
 			else {
@@ -309,25 +317,39 @@ function ZMSGraphic_extEdit_apply() {
 function changeCropperAvailability(available, cropping) {
 	$ZMSGraphic_img = $('.modal-body div#ZMSGraphic_extEdit_image img');
 	if (available) {
-		runPluginCropper(function() {
-			$ZMSGraphic_img.cropper({
-				allowSelect	: false,
-				setSelect	: [ 0, 0, 25, 25 ],
-				minSize		: [25, 25],
-				maxSize		: [ZMSGraphic_act_width, ZMSGraphic_act_height],
-				handles		: true,
-				crop		: function(e) {
+		runPluginCropper(async () => {
+			$('#ZMSGraphic_extEdit_crop i').attr('class','fas fa-spinner fa-spin');
+			await $ZMSGraphic_img.cropper({
+				allowSelect: false,
+				setSelect: [0, 0, 25, 25],
+				minSize: [25, 25],
+				maxSize: [ZMSGraphic_act_width, ZMSGraphic_act_height],
+				handles: true,
+				crop: function (e) {
 					if (ZMSGraphic_action == 'crop') {
 						ZMSGraphic_cropcoords = e.detail;
-						$('#zmiModalZMSGraphic_extEdit_actions input#ZMSGraphic_extEdit_width').val( Math.round(ZMSGraphic_cropcoords.width) );
-						$('#zmiModalZMSGraphic_extEdit_actions input#ZMSGraphic_extEdit_height').val( Math.round(ZMSGraphic_cropcoords.height) );
-					} 
-					// else {
-					// 	$ZMSGraphic_img.cropper('clear');
-					// 	$ZMSGraphic_img.cropper('destroy');
-					// }
+						$('#zmiModalZMSGraphic_extEdit_actions input#ZMSGraphic_extEdit_width').val(Math.round(ZMSGraphic_cropcoords.width));
+						$('#zmiModalZMSGraphic_extEdit_actions input#ZMSGraphic_extEdit_height').val(Math.round(ZMSGraphic_cropcoords.height));
+					} else {
+						$ZMSGraphic_img.cropper('clear');
+						$ZMSGraphic_img.cropper('destroy');
+					};
+					$('#ZMSGraphic_extEdit_crop i').attr('class','fas fa-crop');
 				}
 			});
 		});
+	}
+}
+function get_img_preview_size_class(e, viewport_max=0.8) {
+	var canvas_width_max_px = window.innerWidth*viewport_max;
+	var canvas_height_max_px = window.innerHeight*viewport_max;
+	var ZMSGraphic_act_width = $(e).parent().find('input[id^="width_"]').val();
+	var ZMSGraphic_act_height = $(e).parent().find('input[id^="height_"]').val();
+	if (ZMSGraphic_act_width < canvas_width_max_px && ZMSGraphic_act_height < canvas_height_max_px ) {
+		$(e).addClass('inherit');
+		$(e).removeClass('contain');
+	} else {
+		$(e).addClass('contain');
+		$(e).removeClass('inherit');
 	}
 }

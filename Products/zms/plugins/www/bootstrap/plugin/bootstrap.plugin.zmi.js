@@ -10,19 +10,19 @@ $ZMI.registerReady(function(){
 		if (typeof data_root != "undefined" && typeof data_path != "undefined") {
 			// Bookmark
 			if (manage_menu) {
-				$("#zmi-tab .breadcrumb .active").each(function() {
-					$(this).append(' <a href="javascript:;" title="Bookmark"><i class="fas fa-bookmark-empty text-muted"></a>');
+				$("#zmi-tab .breadcrumb").each(function() {
+					$(this).append('<li class="btn-bookmark"><a href="javascript:;" title="Set Bookmark" class="align-text-top"><i class="far fa-bookmark text-muted"></a><li>');
 					var key = "ZMS."+data_root+".bookmarks";
 					var bookmarks = $ZMILocalStorageAPI.get(key,[]);
 					$("a:last",this).click(function() {
 						var index = bookmarks.indexOf(data_path);
 						if (index >= 0) {
 							bookmarks.splice(index,1);
-							$('.fa-bookmark',this).removeClass("fa-bookmark text-primary").addClass("fa-bookmark-empty text-muted");
+							$('.fa-bookmark',this).removeClass("fas").addClass("far");
 						}
 						else {
 							bookmarks.push(data_path);
-							$('.fa-bookmark-empty',this).removeClass("fa-bookmark-empty text-muted").addClass("fa-bookmark text-primary");
+							$('.fa-bookmark',this).removeClass("far").addClass("fas");
 						}
 						$ZMILocalStorageAPI.replace(key,bookmarks);
 						var frames = window.parent.frames;
@@ -38,9 +38,9 @@ $ZMI.registerReady(function(){
 					});
 					var index = bookmarks.indexOf(data_path);
 					if (index >= 0) {
-						$('.fa-bookmark-empty',this).removeClass("fa-bookmark-empty text-muted").addClass("fa-bookmark text-primary");
+						$('.fa-bookmark',this).removeClass("far").addClass("fas text-primary");
 					} else {
-						$('.fa-bookmark',this).removeClass("fa-bookmark text-primary").addClass("fa-bookmark-empty text-muted");
+						$('.fa-bookmark',this).removeClass("fas text-primary").addClass("far text-muted");
 					}
 				});
 			}
@@ -153,6 +153,26 @@ $ZMI.registerReady(function(){
 			return false;
 		}
 	});
+
+	// Titleimage: Video-Preview on Hover 
+	if ($('.object_has_titleimage')) {
+		$('.object_has_titleimage i.preview_on_hover').each( function() {
+			var media_url = $(this).data('preview_url');
+			if ( media_url.search('.mp4') > -1 ) {
+				var this_container = $(this).closest('.zmi-manage-main-change');
+				var media_html = '<video autoplay="" autostart="" loop="" playsinline="" muted="" preload="auto"><source src="' +  media_url + '"></video>';
+				$(this)
+					.on('mouseout',function() {
+						$('video',this_container).remove();
+					})
+					.on('mouseover',function() {
+						if ($('video',this_container).length==0 ) {
+							this_container.append(media_html)
+						}
+					})
+			};
+		});
+	};
 
 	// Filters
 	$(".collapse.filters").each(function() {
@@ -2087,34 +2107,44 @@ $ZMI.registerReady(function(){
 			reAdjust();
 	});
 });
+
 // ############################################################################
 // ### BACK-TO-TOP-SCROLL BUTTON
 // ############################################################################
+function isScrolledIntoView(elem) {
+	var docViewTop = $(window).scrollTop();
+	var docViewBottom = docViewTop + $(window).height();
+	var elemTop = $(elem).offset().top;
+	var elemBottom = elemTop + $(elem).height();
+	return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
+};
 $ZMI.registerReady(function(){
-	// Reference: https://getflywheel.com/layout/sticky-back-to-top-button-tutorial/
 	const scrollToTopButton = document.getElementById('js-top');
-	if ( scrollToTopButton ) {
-		const scrollFunc = () => {
-			let y = window.scrollY;
-			if (y > 0) {
-				scrollToTopButton.className = "back-to-top show";
-			} else {
-				scrollToTopButton.className = "back-to-top hide";
+	const stickyControls = document.getElementsByClassName('sticky-controls')[0];
+	window.onscroll = function () {
+		let y = window.scrollY;
+		if ( y > 42 ) {
+			// Show back-to-top button on scroll
+			scrollToTopButton.className = "back-to-top show";
+		} else {
+			scrollToTopButton.className = "back-to-top hide";
+		}
+		if (stickyControls) {
+			if ( !isScrolledIntoView(stickyControls) ){
+				stickyControls.classList.add('sticky-controls-activated');
 			}
-		};
-		window.addEventListener("scroll", scrollFunc);
-		const scrollToTop = () => {
-			const c = document.documentElement.scrollTop || document.body.scrollTop;
-			if (c > 0) {
-				window.requestAnimationFrame(scrollToTop);
-				window.scrollTo(0, c - c / 10);
+			if (y == 0) {
+				stickyControls.classList.remove('sticky-controls-activated');
 			}
 		}
-		scrollToTopButton.onclick = function(e) {
-			e.preventDefault();
-			scrollToTop();
-		}
-	}
+	};
+	// Scroll back-to-top after button click
+	scrollToTopButton.onclick = () => {
+		$('html, body').animate({
+			scrollTop: 0
+		}, 600);
+		return false;
+	};
 });
 
 // /////////////////////////////////////////////////////////////////////////////
