@@ -17,12 +17,9 @@
 ################################################################################
 
 # Imports.
-from __future__ import absolute_import
-from App.Common import package_home
 from OFS.role import RoleManager
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from OFS.CopySupport import _cb_decode, _cb_encode, CopyError # TODO , eNoData, eNotFound, eInvalid
-import copy
+from OFS.CopySupport import _cb_decode, _cb_encode
 import re
 import sys
 import time
@@ -30,9 +27,7 @@ import time
 from Products.zms import zmsobject
 from Products.zms import standard
 from Products.zms import _accessmanager
-from Products.zms import _confmanager
 from Products.zms import _fileutil
-from Products.zms import _objattrs
 from Products.zms import _versionmanager
 from Products.zms import _zmi_actions_util
 
@@ -529,7 +524,7 @@ class ZMSContainerObject(
       ob = None
       root = standard.nvl(root, self.getDocumentElement())
       while True:
-        children = self.filteredChildNodes(REQUEST, self.PAGES)
+        children = [childNode for childNode in self.filteredChildNodes(REQUEST, self.PAGES) if ((incResource==False and not childNode.isResource(REQUEST)) or incResource==True) ]
         if len(children) > 0:
           ob = children[0]
         else:

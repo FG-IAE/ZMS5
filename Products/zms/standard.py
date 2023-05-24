@@ -26,7 +26,6 @@ Scripts.  It can be accessed from Python with the statement
 "import Products.zms.standard"
 """
 # Imports.
-from __future__ import absolute_import
 from AccessControl.SecurityInfo import ModuleSecurityInfo
 from App.Common import package_home
 from App.config import getConfiguration
@@ -49,7 +48,6 @@ import sys
 import time
 import traceback
 import zExceptions
-import six
 
 # Product Imports.
 from Products.zms import _globals
@@ -409,10 +407,10 @@ def string_maxlen(s, maxlen=20, etc='...', encoding=None):
   else:
     s = str(s)
   # remove all tags.
-  s = re.sub( '<!--(.*?)-->', '', s)
-  s = re.sub( '<script((.|\n|\r|\t)*?)>((.|\n|\r|\t)*?)</script>', '', s)
-  s = re.sub( '<style((.|\n|\r|\t)*?)>((.|\n|\r|\t)*?)</style>', '', s)
-  s = re.sub( '<((.|\n|\r|\t)*?)>', '', s)
+  s = re.sub(r'<!--(.*?)-->', '', s)
+  s = re.sub(r'<script((.|\n|\r|\t)*?)>((.|\n|\r|\t)*?)</script>', '', s)
+  s = re.sub(r'<style((.|\n|\r|\t)*?)>((.|\n|\r|\t)*?)</style>', '', s)
+  s = re.sub(r'<((.|\n|\r|\t)*?)>', '', s)
   if len(s) > maxlen:
     if s[:maxlen].rfind('&') >= 0 and not s[:maxlen].rfind('&') < s[:maxlen].rfind(';') and \
        s[maxlen:].find(';') >= 0 and not s[maxlen:].find(';') > s[maxlen:].find('&'):
@@ -688,7 +686,7 @@ def id_prefix(s):
   @return: Id-prefix
   @rtype: C{str}
   """
-  return re.findall('^(\\D*)', s)[0]
+  return re.findall(r'^(\D*)', s)[0]
 
 
 security.declarePublic('id_quote')
@@ -2223,8 +2221,8 @@ def dt_html(context, value, REQUEST):
     if value[ j-1] == '/':
       value = value[ :j-1] + value[ j:]
     i = j
-  value = re.sub( '<dtml-sendmail(.*?)>(\r\n|\n)', '<dtml-sendmail\\1>', value)
-  value = re.sub( '</dtml-var>', '', value)
+  value = re.sub(r'<dtml-sendmail(.*?)>(\r\n|\n)', '<dtml-sendmail\\1>', value)
+  value = re.sub(r'</dtml-var>', '', value)
   dtml = DocumentTemplate.DT_HTML.HTML(value)
   value = dtml( context, REQUEST)
   return value

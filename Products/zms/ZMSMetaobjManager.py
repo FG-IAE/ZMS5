@@ -20,22 +20,14 @@
 # Imports.
 from distutils.version import LooseVersion
 import ZPublisher.HTTPRequest
-import collections
 import copy
 import io
-import os
-import sys
 import time
-import zExceptions
-import zope.interface
 # Product Imports.
-from Products.zms import IZMSRepositoryProvider
 from Products.zms import standard
 from Products.zms import zopeutil
 from Products.zms import _blobfields
-from Products.zms import _fileutil
 from Products.zms import _globals
-from Products.zms import _multilangmanager
 from Products.zms import _ziputil
 
 
@@ -1160,16 +1152,12 @@ class ZMSMetaobjManager(object):
                   if len(getattr(newCustom, 'filename', '')):
                       newCustom = _blobfields.createBlobField( self, _blobfields.MyFile, newCustom)
                   else:
-                      REQUEST.set('attr_custom_%s_modified'%old_id, '0')
-              # Restore resource.
-              if REQUEST.get('attr_custom_%s_modified'%old_id, '1') == '0' and \
-                 REQUEST.get('attr_custom_%s_active'%old_id, '0') == '1':
-                  savedAttr = [x for x in savedAttrs if x['id'] == old_id][0]
-                  syncZopeMetaobjAttr( self, newValue, savedAttr)
-                  if savedAttr['ob']:
-                    filename = savedAttr['ob'].title
-                    data = bytes(zopeutil.readData(savedAttr['ob']))
-                    newCustom = _blobfields.createBlobField( self, _blobfields.MyFile, {'filename':filename,'data':data})
+                    savedAttr = [x for x in savedAttrs if x['id'] == old_id][0]
+                    syncZopeMetaobjAttr( self, newValue, savedAttr)
+                    if savedAttr['ob']:
+                      filename = savedAttr['ob'].title
+                      data = bytes(zopeutil.readData(savedAttr['ob']))
+                      newCustom = _blobfields.createBlobField( self, _blobfields.MyFile, {'filename':filename,'data':data})
               # Change attribute.
               message += self.setMetaobjAttr( id, old_id, attr_id, newName, newMandatory, newMultilang, newRepetitive, newType, newKeys, newCustom, newDefault)
             # Return with message.
@@ -1386,9 +1374,9 @@ class ZMSMetaobjManager(object):
         if RESPONSE:
           if len( message) > 0:
             message += ' (in '+str(int((time.time()-t0)*100.0)/100.0)+' secs.)'
-            target = self.url_append_params( target, { messagekey: message}, sep='&')
-          target = self.url_append_params( target, { 'lang': lang, 'id':id, 'attr_id':REQUEST.get('attr_id', '')}, sep='&')
-          target = self.url_append_params( target, extra, sep='&')
+            target = standard.url_append_params( target, { messagekey: message}, sep='&')
+          target = standard.url_append_params( target, { 'lang': lang, 'id':id, 'attr_id':REQUEST.get('attr_id', '')}, sep='&')
+          target = standard.url_append_params( target, extra, sep='&')
           if 'inp_id_name' in REQUEST:
             target += '&inp_id_name=%s'%REQUEST.get('inp_id_name')
             target += '&inp_name_name=%s'%REQUEST.get('inp_name_name')
