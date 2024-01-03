@@ -22,27 +22,18 @@ CKEDITOR.editorConfig = function( config ) {
 	config.toolbar = 'ZMSBasicToolbar';
 	config.toolbar_ZMSBasicToolbar = [
 		{ name: 'styles',      items: [ 'Format' ] },
-                // changed by UzK
-		//{ name: 'paragraph',   items: ['Bold','Italic','Underline','JustifyLeft','JustifyCenter','JustifyRight','NumberedList','BulletedList','Outdent','Indent'] },
-                { name: 'paragraph',   items: ['Bold','Italic','Subscript','Superscript','NumberedList','BulletedList','Outdent','Indent'] }, 
+		{ name: 'paragraph',   items: ['Bold','Italic','Underline','JustifyLeft','JustifyCenter','JustifyRight','NumberedList','BulletedList','Outdent','Indent'] },
 		{ name: 'undo',        items: [ 'Undo', 'Redo' ] },
 		{ name: 'editing',     items: [ 'Find' ] }, //'/', <== Line-Break
 		{ name: 'links',       items: [ 'linkbutton', 'Unlink' ] },
-                // changed by UzK
-		//{ name: 'insert',      items: [ 'Anchor', 'Table' ] },
-                // changed by UzK
-		//{ name: 'tools',       items: [ 'Source', 'ShowBlocks', 'Maximize', 'Scayt', '-', 'About' ] },
-                { name: 'tools',       items: [ 'ShowBlocks', 'Maximize', 'Scayt', '-', 'About' ] },
+		{ name: 'insert',      items: [ 'Anchor', 'Table' ] },
+		{ name: 'tools',       items: [ 'Source', 'ShowBlocks', 'Maximize', 'Scayt', '-', 'About' ] }
 	];
 	config.toolbar_ZMSBasicInsertToolbar = [
 		{ name: 'styles',      items: [ 'Format' ] },
-                // changed by UzK
-		//{ name: 'paragraph',   items: ['Bold','Italic','Underline','JustifyLeft','JustifyCenter','JustifyRight','NumberedList','BulletedList','Outdent','Indent'] },
-                { name: 'paragraph',   items: ['Bold','Italic','Subscript','Superscript','NumberedList','BulletedList','Outdent','Indent'] },
+		{ name: 'paragraph',   items: ['Bold','Italic','Underline','JustifyLeft','JustifyCenter','JustifyRight','NumberedList','BulletedList','Outdent','Indent'] },
 		{ name: 'undo',        items: [ 'Undo', 'Redo' ] },
-                // changed by UzK
-		//{ name: 'tools',       items: [ 'Source', 'ShowBlocks', 'Maximize', 'Scayt', '-', 'About' ] },
-                { name: 'tools',       items: [ 'ShowBlocks', 'Maximize', 'Scayt', '-', 'About' ] },  
+		{ name: 'tools',       items: [ 'Source', 'ShowBlocks', 'Maximize', 'Scayt', '-', 'About' ] }
 	];
 	var prefix = "ckeditor.config";
 	var confProperties = $ZMI.getConfProperties(prefix);
